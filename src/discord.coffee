@@ -53,17 +53,18 @@ class DiscordBot extends Adapter
         @receive new TextMessage( user, text, message.id )
 
      send: (envelope, messages...) ->
+        dst = rooms[envelope.room] || envelope.room
         for msg in messages
-            @client.sendMessage rooms[envelope.room], msg
+            @client.sendMessage dst, msg
 
      reply: (envelope, messages...) ->
 
         # discord.js reply function looks for a 'sender' which doesn't 
         # exist in our envelope object
-
+        dst = rooms[envelope.room] || envelope.room
         user = envelope.user.name
         for msg in messages
-            @client.sendMessage rooms[envelope.room], "#{user} #{msg}" 
+            @client.sendMessage dst, "#{user} #{msg}" 
         
         
 exports.use = (robot) ->
